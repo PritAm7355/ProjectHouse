@@ -1,53 +1,68 @@
-/* Base styles */
-body {
+/* === GLOBAL RESET & BASE === */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
   margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   background-color: #f8f9fa;
   color: #2e2e2e;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: 'Fira Code', Menlo, Monaco, Consolas, 'Courier New', monospace;
+/* === LOGO === */
+img[alt="Logo"] {
+  display: block;
+  margin: 30px auto 10px;
+  width: 80%;
+  max-width: 280px;
 }
 
-/* Container for both forms */
+/* === AUTH CONTAINER === */
 .auth-container {
-  max-width: 420px;
-  margin: 60px auto;
-  padding: 40px 30px;
+  width: 90%;
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 30px 24px;
   background-color: #ffffff;
   border: 1px solid #ddd;
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  font-family: 'Inter', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-/* Form layout */
+/* === FORM === */
 .auth-form {
   display: flex;
   flex-direction: column;
+  gap: 18px;
 }
 
-/* Title */
+/* === FORM TITLE === */
 .auth-title {
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  margin-bottom: 24px;
   text-align: center;
+  margin-bottom: 10px;
   color: #1a1a1a;
 }
 
-/* Inputs */
+/* === INPUTS === */
 .auth-input {
   padding: 12px 16px;
-  margin-bottom: 18px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
   font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
   background-color: #fdfdfd;
   color: #333;
   outline: none;
@@ -59,58 +74,67 @@ code {
   box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.25);
 }
 
-/* Submit button */
+/* === BUTTONS === */
 .auth-button {
-  background: #4a4a4a;
-  color: white;
+  background-color: #4a4a4a;
+  color: #fff;
   font-weight: 600;
-  padding: 12px 0;
-  border-radius: 8px;
+  padding: 12px;
+  font-size: 1.05rem;
   border: none;
-  font-size: 1.1rem;
+  border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s ease;
 }
 
 .auth-button:hover {
-  background: #2e2e2e;
+  background-color: #2e2e2e;
 }
 
-/* Navigation button (e.g. Switch to Login/Signup) */
 .auth-link-button {
   background: transparent;
   border: 2px solid #4a4a4a;
   color: #4a4a4a;
   font-weight: 500;
-  padding: 10px 0;
-  margin-top: 20px;
+  padding: 10px;
   border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.3s ease, color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .auth-link-button:hover {
-  background: #4a4a4a;
+  background-color: #4a4a4a;
   color: white;
 }
 
-/* ✅ Responsive for mobile */
-@media screen and (max-width: 480px) {
+/* === RESPONSIVE MEDIA QUERIES === */
+@media (max-width: 480px) {
   .auth-container {
-    margin: 30px 16px;
-    padding: 30px 20px;
-    border-radius: 12px;
+    padding: 20px 16px;
+    margin: 20px auto;
   }
 
   .auth-title {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
 
   .auth-input,
   .auth-button,
   .auth-link-button {
     font-size: 0.95rem;
-    padding: 10px 12px;
+    padding: 10px;
+  }
+
+  img[alt="Logo"] {
+    width: 90%;
+    max-width: 240px;
+    margin-top: 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  .auth-container {
+    margin: 60px auto;
   }
 }
