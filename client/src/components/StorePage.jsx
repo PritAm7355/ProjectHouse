@@ -1,12 +1,24 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const StorePage = () => {
   const [projects, setProjects] = useState([]);
   const rawUser = localStorage.getItem("user");
   const user = rawUser && rawUser !== "undefined" ? JSON.parse(rawUser) : null;
+  const navigate = useNavigate()
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/auth");
+  };
+  
 
   useEffect(() => {
+    if (!user) {
+      alert("Please login first");
+      window.location.href = "/auth";
+      return null;
+    }
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/projects`)
       .then((res) => {
@@ -107,6 +119,31 @@ const StorePage = () => {
 };
   return (
     <div className="store-container">
+      <div style={{
+        position: 'fixed',
+        bottom: '20px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '100%',
+        textAlign: 'center'
+      }}>
+        <button 
+          onClick={handleLogout} 
+          style={{ 
+            padding: '8px 16px', 
+            backgroundColor: '#f44336', 
+            color: 'white', 
+            border: 'none', 
+            borderRadius: '4px', 
+            cursor: 'pointer',
+            fontSize: '16px',
+            fontWeight: 'bold'
+          }}
+        >
+          Logout
+        </button>
+      </div>
+
       <h2 className="store-title">Available Student Projects</h2>
       <div className="projects-grid">
         {projects.map((project) => (
