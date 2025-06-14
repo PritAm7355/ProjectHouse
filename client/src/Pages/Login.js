@@ -9,7 +9,6 @@ export default function Login() {
   const [initialLoad, setInitialLoad] = useState(true);
 
   useEffect(() => {
-    
     const rawUser = localStorage.getItem("user");
     const user = rawUser && rawUser !== "undefined" ? JSON.parse(rawUser) : null;
     
@@ -55,33 +54,47 @@ export default function Login() {
   };
 
   return (
-    <>
-      <img src={Logo} alt="Logo" width="350" />
-      <div className="auth-container" style={{ minHeight: '100vh', padding: '16px', backgroundColor: '#f8f9fa' }}>
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <h2 className="auth-title">Login</h2>
-          <input
-            className="auth-input"
-            name="email"
-            placeholder="Email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-          <input
-            className="auth-input"
-            name="password"
-            type="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-          <button className="auth-button" type="submit">
-            Login
-          </button>
-        </form>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <div style={{ flex: 1 }}>
+        <img src={Logo} alt="Logo" width="350" />
+        <div className="auth-container" style={{ minHeight: '10vh', padding: '16px', backgroundColor: '#f8f9fa' }}>
+          <form className="auth-form" onSubmit={handleSubmit}>
+            <h2 className="auth-title">Login</h2>
+            <input
+              className="auth-input"
+              name="email"
+              placeholder="Email"
+              value={form.email}
+              onChange={handleChange}
+              required
+            />
+            <input
+              className="auth-input"
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+            <button className="auth-button" type="submit">
+              Login
+            </button>
+          </form>
+        </div>
       </div>
-    </>
+      <footer style={{ 
+        backgroundColor: '#333', 
+        color: 'white', 
+        padding: '20px', 
+        textAlign: 'center',
+        marginTop: 'auto',
+        borderRadius:'10px'
+      }}>
+        <h3>Contact Us</h3>
+        <p>Phone: 9370808882, 9145275734</p>
+        <p>Email: hrishikeshrshinde2003@gmail.com, chakaneomkar887@gmail.com</p>
+      </footer>
+    </div>
   );
 }
