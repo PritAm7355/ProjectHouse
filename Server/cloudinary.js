@@ -1,31 +1,53 @@
+// routes/cloudinary.js
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from "express";
-import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
-import fs from "fs";
+import crypto from "crypto";
+
+const router = express.Router();
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+console.log("🔐 Cloudinary Config:");
+console.log("Cloud Name:", process.env.CLOUDINARY_CLOUD_NAME);
+console.log("API Key:", process.env.CLOUDINARY_API_KEY);
+console.log("API Secret:", process.env.CLOUDINARY_API_SECRET);
+// routes/cloudinary.js
+// ✅ server.js or controller
 
-const router = express.Router();
-const upload = multer({ dest: "uploads/" });
 
-router.post("/upload-zip", upload.single("file"), async (req, res) => {
-  try {
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      resource_type: "raw",
-      folder: "projects",
-    });
+router.post("/generate-signature", (req, res) => {
+  const timestamp = Math.floor(Date.now() / 1000);
+  const folder = "projectzips";
 
-    fs.unlinkSync(req.file.path); // cleanup
+  const paramsToSign = {
+    timestamp,
+    folder,
+  };
 
-    res.json({ url: result.secure_url });
-  } catch (err) {
-    console.error("Upload failed", err);
-    res.status(500).json({ message: "Failed to upload" });
-  }
+  const queryString = Object.keys(paramsToSign)
+    .sort()
+    .map((key) => `${key}=${paramsToSign[key]}`)
+    .join("&");
+
+  const signature = crypto
+    .createHash("sha1")
+    .update(queryString + process.env.CLOUDINARY_API_SECRET)
+    .digest("hex");
+
+  res.json({
+    timestamp,
+    signature,
+    folder,
+    apiKey: process.env.CLOUDINARY_API_KEY,
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+  });
 });
+
 
 export default router;

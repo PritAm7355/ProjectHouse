@@ -22,67 +22,84 @@ const AddProjectForm = ({ onProjectAdded }) => {
     }
   };
 
-  const uploadToCloudinary = async (file) => {
-    const data = new FormData();
-    data.append("file", file);
-    data.append("upload_preset", "dwepjfo0"); // replace with yours
+const uploadToGoFile = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
 
-    try {
-      const res = await axios.post(
-       `https://api.cloudinary.com/v1_1/duqdbbfbu/raw/upload`, // raw is key
-        data
-      );
-      return res.data.secure_url;
-    } catch (err) {
-      console.error("❌ Upload failed:", err);
-      throw new Error("Upload failed");
+    // Optional: If you have a permanent token and want to upload to your account
+    formData.append("token", "LYTmKwM2T7CTEib1bjNQ4hpCK113dkxe");
+
+    // ✅ Use global upload endpoint
+    const response = await axios.post(
+      "https://upload.gofile.io/uploadFile",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    if (response.data.status !== "ok") {
+      throw new Error("Upload failed: " + response.data.status);
     }
-  };
+
+    const { downloadPage, fileId } = response.data.data;
+    console.log("✅ GoFile Upload Successful:", downloadPage);
+    return { downloadPage, fileId };
+  } catch (error) {
+    console.error("❌ GoFile upload failed:", error);
+    throw new Error("Upload to GoFile failed");
+  }
+};
+
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const techStackArray = formData.techStack
-      .split(",")
-      .map((tech) => tech.trim());
+  const techStackArray = formData.techStack
+    .split(",")
+    .map((tech) => tech.trim());
 
-    try {
-      if (!formData.file) {
-        setStatus("❌ Please upload a ZIP file.");
-        return;
-      }
-        
-      // Upload file to Cloudinary
-      const downloadLink = await uploadToCloudinary(formData.file);
-
-      // Send to backend
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/projects`, {
-        title: formData.title,
-        description: formData.description,
-        price: formData.price,
-        techStack: techStackArray,
-        downloadLink,
-        demoLink: formData.demoLink,
-      });
-
-      setStatus("✅ Project added successfully!");
-      onProjectAdded(response.data);
-
-      // Reset form
-      setFormData({
-        title: "",
-        description: "",
-        price: "",
-        techStack: "",
-        file: null,
-      });
-
-      setTimeout(() => setStatus(""), 3000);
-    } catch (err) {
-      console.error(err);
-      setStatus("❌ Error adding project.");
+  try {
+    const gofileResponse = await uploadToGoFile(formData.file); 
+    if (!formData.file) {
+      setStatus("❌ Please upload a ZIP file.");
+      return;
     }
-  };
+
+    // ✅ Upload file to GoFile instead of Cloudinary
+    const downloadLink = await uploadToGoFile(formData.file);
+
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/projects`, {
+      title: formData.title,
+      description: formData.description,
+      price: formData.price,
+      techStack: techStackArray,
+   downloadLink: gofileResponse.downloadPage, 
+      demoLink: formData.demoLink,
+    });
+
+    setStatus("✅ Project added successfully!");
+    onProjectAdded(response.data);
+
+    setFormData({
+      title: "",
+      description: "",
+      price: "",
+      techStack: "",
+      file: null,
+      demoLink: "",
+    });
+
+    setTimeout(() => setStatus(""), 3000);
+  } catch (err) {
+    console.error(err);
+    setStatus("❌ Error adding project.");
+  }
+};
+
 
   return (
     <div className="project-form-container">
@@ -131,13 +148,14 @@ const AddProjectForm = ({ onProjectAdded }) => {
 />
 
         <input
-          type="file"
-          name="file"
-          accept=".zip"
-          onChange={handleChange}
-          className="form-input"
-          required
-        />
+  type="file"
+  name="file"
+  accept=".zip,.7z"
+  onChange={handleChange}
+  className="form-input"
+  required
+/>
+
         <button type="submit" className="submit-button">
           Submit
         </button>
