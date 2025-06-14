@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Logo from '../images/Logo.png';
@@ -6,35 +6,47 @@ import Logo from '../images/Logo.png';
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+  const [initialLoad, setInitialLoad] = useState(true);
 
+  useEffect(() => {
+    
+    const rawUser = localStorage.getItem("user");
+    const user = rawUser && rawUser !== "undefined" ? JSON.parse(rawUser) : null;
+    
+    if (user && !initialLoad) {  
+      alert("Please Logout First");
+      if (user.role === "project-manager") {
+        navigate("/add-project");
+      } else if (user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/store");
+      }
+    }
+    setInitialLoad(true); 
+  }, [navigate, initialLoad]);
 
-
-
-
-
-  
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
         
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
         email: form.email,
         password: form.password,
-        
       });
 
-      const { role, token, userId  } = response.data;
-  localStorage.setItem("user", JSON.stringify({ _id: userId, token }));
+      const { role, token, userId } = response.data;
+      localStorage.setItem("user", JSON.stringify({ _id: userId, token, role }));
+      
       if (role === "project-manager") {
         navigate("/add-project");
       } else if (role === "admin") {
         navigate("/admin");
       } else {
-        navigate("/store"); // normal user redirect
+        navigate("/store");
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -44,13 +56,10 @@ export default function Login() {
 
   return (
     <>
-      
       <img src={Logo} alt="Logo" width="350" />
-
-      <div className="auth-container">
+      <div className="auth-container" style={{ minHeight: '100vh', padding: '16px', backgroundColor: '#f8f9fa' }}>
         <form className="auth-form" onSubmit={handleSubmit}>
           <h2 className="auth-title">Login</h2>
-
           <input
             className="auth-input"
             name="email"
@@ -59,7 +68,6 @@ export default function Login() {
             onChange={handleChange}
             required
           />
-
           <input
             className="auth-input"
             name="password"
@@ -69,7 +77,6 @@ export default function Login() {
             onChange={handleChange}
             required
           />
-
           <button className="auth-button" type="submit">
             Login
           </button>
