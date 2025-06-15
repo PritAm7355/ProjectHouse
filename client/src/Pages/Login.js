@@ -86,10 +86,10 @@ export default function Login() {
       <footer style={{ 
         backgroundColor: '#333', 
         color: 'white', 
-        padding: '20px', 
+        padding: '60px', 
         textAlign: 'center',
         marginTop: 'auto',
-        borderRadius:'10px'
+        borderRadius:'25px'
       }}>
         <h3>Contact Us</h3>
         <p>Phone: 9370808882, 9145275734</p>
