@@ -83,17 +83,25 @@ export default function Login() {
           </form>
         </div>
       </div>
-      <footer style={{ 
-        backgroundColor: '#333', 
-        color: 'white', 
-        padding: '60px', 
-        textAlign: 'center',
-        marginTop: 'auto',
-        borderRadius:'25px'
-      }}>
-        <h3>Contact Us</h3>
-        <p>Phone: 9370808882, 9145275734</p>
-        <p>Email: hrishikeshrshinde2003@gmail.com, chakaneomkar887@gmail.com</p>
+     <footer
+        style={{
+          backgroundColor: "#333",
+          color: "white",
+          padding: "20px 15px",
+          textAlign: "center",
+          marginTop: "auto",
+          borderRadius: "25px",
+          width: "100%",
+          boxSizing: "border-box",
+          wordBreak: "break-word",
+        }}
+      >
+        <h3 style={{ marginBottom: "15px" }}>Contact Us</h3>
+        <div style={{ marginBottom: "10px" }}>
+          Phone: 9370808882, 9145275734
+        </div>
+        <div>Email: hrishikeshrshinde2003@gmail.com</div>
+        <div>chakaneomkar887@gmail.com</div>
       </footer>
     </div>
   );
